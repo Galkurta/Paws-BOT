@@ -12,6 +12,8 @@
   "dependencies": {
     "axios": "^1.7.7",
     "luxon": "^3.5.0",
+    "tonweb": "^0.0.66",
+    "tonweb-mnemonic": "^1.0.1",
     "winston": "^3.15.0"
   }
 }
