@@ -59,13 +59,11 @@ async function generateBulkWallets(count) {
       wallets.push(wallet);
       addresses.push(wallet.address);
 
-      // Progress update setiap 10 wallet
       if ((i + 1) % 10 === 0 || i === count - 1) {
         console.log(`Generated ${i + 1}/${count} wallets`);
       }
     }
 
-    // Menyiapkan konten untuk file details
     const detailsContent = wallets
       .map((wallet, index) => {
         return (
@@ -80,10 +78,8 @@ async function generateBulkWallets(count) {
       })
       .join("\n");
 
-    // Menyiapkan konten untuk file addresses
     const addressesContent = addresses.join("\n");
 
-    // Menyimpan ke file
     await fs.writeFile(detailsFileName, detailsContent);
     await fs.writeFile(addressesFileName, addressesContent);
 
@@ -91,7 +87,6 @@ async function generateBulkWallets(count) {
     console.log(`Full details saved to: ${detailsFileName}`);
     console.log(`Addresses only saved to: ${addressesFileName}`);
 
-    // Menampilkan statistik
     console.log("\nSummary:");
     console.log(`Total wallets generated: ${wallets.length}`);
     console.log(`File sizes:`);
@@ -107,13 +102,11 @@ async function generateBulkWallets(count) {
   }
 }
 
-// Fungsi utama dengan prompt
 async function main() {
   try {
     console.log("TON Wallet Bulk Generator");
     console.log("========================");
 
-    // Meminta input jumlah wallet
     let numberOfWallets;
     while (true) {
       const input = await promptUser(
@@ -126,7 +119,6 @@ async function main() {
         continue;
       }
 
-      // Konfirmasi jika jumlah wallet besar
       if (numberOfWallets > 100) {
         const confirm = await promptUser(
           `You are about to generate ${numberOfWallets} wallets. This might take some time. Continue? (y/n): `
