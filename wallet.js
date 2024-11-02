@@ -3,7 +3,6 @@ const tonMnemonic = require("tonweb-mnemonic");
 const fs = require("fs").promises;
 const readline = require("readline");
 
-// Fungsi untuk membuat prompt input
 function promptUser(question) {
   const rl = readline.createInterface({
     input: process.stdin,
@@ -31,7 +30,8 @@ async function generateTONWallet() {
     });
 
     const address = await wallet.getAddress();
-    const addressString = address.toString(true, true, true);
+    let addressString = address.toString({ bounceable: true });
+    addressString = addressString.replace(/\+/g, "-").replace(/\//g, "_");
 
     return {
       mnemonic: words.join(" "),
@@ -48,10 +48,10 @@ async function generateBulkWallets(count) {
   const wallets = [];
   const addresses = [];
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-  const detailsFileName = `ton_wallets_details_${timestamp}.txt`;
+  const detailsFileName = `wallets_details_${timestamp}.txt`;
   const addressesFileName = `wallet.txt`;
 
-  console.log(`\nStarting generation of ${count} wallets...`);
+  console.log(`\nStarting generation of ${count} wallet(s)...`);
 
   try {
     for (let i = 0; i < count; i++) {
@@ -60,7 +60,7 @@ async function generateBulkWallets(count) {
       addresses.push(wallet.address);
 
       if ((i + 1) % 10 === 0 || i === count - 1) {
-        console.log(`Generated ${i + 1}/${count} wallets`);
+        console.log(`Generated ${i + 1}/${count} wallet(s)`);
       }
     }
 
@@ -86,16 +86,6 @@ async function generateBulkWallets(count) {
     console.log("\nGeneration completed successfully!");
     console.log(`Full details saved to: ${detailsFileName}`);
     console.log(`Addresses only saved to: ${addressesFileName}`);
-
-    console.log("\nSummary:");
-    console.log(`Total wallets generated: ${wallets.length}`);
-    console.log(`File sizes:`);
-    const detailsStats = await fs.stat(detailsFileName);
-    const addressesStats = await fs.stat(addressesFileName);
-    console.log(`- Details file: ${(detailsStats.size / 1024).toFixed(2)} KB`);
-    console.log(
-      `- Addresses file: ${(addressesStats.size / 1024).toFixed(2)} KB`
-    );
   } catch (error) {
     console.error("Error during bulk generation:", error);
     throw error;
@@ -104,8 +94,8 @@ async function generateBulkWallets(count) {
 
 async function main() {
   try {
-    console.log("TON Wallet Bulk Generator");
-    console.log("========================");
+    console.log("TON Wallet Generator");
+    console.log("===================");
 
     let numberOfWallets;
     while (true) {
